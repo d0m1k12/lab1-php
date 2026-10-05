@@ -19,9 +19,39 @@ function getCurrentGreeting() {
       return "Доброї ночі"; }
 }
 
-$taskTitle = "зробити то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, то сьо туда сюда, а ще треба зробити це і те, і ще багато чого іншого, що займає багато часу і сил і мозку і совісті і всього іншого, що тільки можна уявити";
-$isCompleted = true;
-$taskTimeEstimate = 3;
+$tasks = [
+  [
+    'id' => 1,
+    'title' => 'зробити то сьо',
+    'priority' => 'High',
+    'isCompleted' => false,
+    'timeEstimate' => 2
+  ],
+
+  [
+    'id' => 2,
+    'title' => 'покушать',
+    'priority' => 'Medium',
+    'isCompleted' => true,
+    'timeEstimate' => 4
+  ],
+
+  [
+    'id' => 3,
+    'title' => 'поспать',
+    'priority' => 'High',
+    'isCompleted' => false,
+    'timeEstimate' => 8
+  ],
+
+  [
+    'id' => 4,
+    'title' => 'погулять',
+    'priority' => 'Low',
+    'isCompleted' => true,
+    'timeEstimate' => 1
+  ]
+];
 ?>
 
 
@@ -50,17 +80,21 @@ $taskTimeEstimate = 3;
   <main>
     <h2>Список завдань:</h2>
     <ul>
-      <li class="<?= $isCompleted ? 'task-done' : 'task-pending' ?>">
-        <strong>Завдання:</strong> <?= formatTitle($taskTitle) ?> <br>
-        <span class="status-badge">
-          <?php if ($isCompleted): ?>
-            Виконано
-          <?php else: ?>
-            В процесі виконання
-          <?php endif; ?>
-        </span><br>
-        <strong>Очікуваний час виконання:</strong> <?= $taskTimeEstimate ?> год.
-      </li>
+
+      <?php foreach ($tasks as $task): ?>
+
+        <li class="<?= $task['isCompleted'] ? 'task-done' : 'task-pending' ?>">
+          <strong>Завдання:</strong> <?= formatTitle($task['title']) ?> <br>
+          <span class="status-badge">
+            <?php if ($task['isCompleted']): ?>
+              Виконано
+            <?php else: ?>
+              В процесі виконання
+            <?php endif; ?>
+          </span><br>
+          <strong>Очікуваний час виконання:</strong> <?= $task['timeEstimate'] ?> год.
+        </li>
+      <?php endforeach; ?>
     </ul>
   </main>
 </body>
