@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $appName = "тосьо";
 function formatTitle($text, $maxLength = 20) {
     if (mb_strlen($text, 'UTF-8') > $maxLength) {
@@ -60,6 +62,7 @@ $tasks = [
 <head>
   <meta charset="UTF-8">
   <title><?= $appName ?></title>
+  <link rel="stylesheet" href="style.css">
   <style>
     .task-done {
       color: green;
@@ -74,7 +77,15 @@ $tasks = [
 </head>
 <body>
   <header>
+    <?php include 'navigation.php'; ?>
     <h1><?= getCurrentGreeting() ?>, Дмитре! </h1>
+
+    <?php if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true): ?>
+      <p>Привіт, <?= htmlspecialchars($_SESSION['user_name']) ?>! <a href="logout.php">[Вийти]</a></p>
+    <?php else: ?>
+      <p>Ви увійшли як Гість. <a href="login.php">[Увійти]</a></p>
+    <?php endif; ?>
+
   </header>
   
   <main>
