@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "title": "то",
+        "isCompleted": false,
+        "deadline": "2026-10-24"
+    },
+    {
+        "id": 2,
+        "title": "сьо",
+        "isCompleted": false,
+        "deadline": "2026-10-27"
+    },
+    {
+        "id": 3,
+        "title": "во",
+        "isCompleted": true,
+        "deadline": "2026-10-28"
+    }
+]

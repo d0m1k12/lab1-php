@@ -5,9 +5,13 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     exit;
 }
 
+require_once __DIR__ . '/Task.php';
+require_once __DIR__ . '/TaskRepository.php';
+
 $title = '';
 $description = '';
 $priority = 'Low';
+$deadline = '';
 $errors = [];
 $uploadedFilePath = '';
 
@@ -23,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = htmlspecialchars(trim($_POST['title'] ?? ''));
     $description = htmlspecialchars(trim($_POST['description'] ?? ''));
     $priority = $_POST['priority'] ?? 'Low';
+    $deadline = trim($_POST['deadline'] ?? '') ?: null;
+
     if (empty($title)) {
         $errors[] = "Поле «Назва завдання» є обов'язковим для заповнення!";
     }
@@ -77,19 +83,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        echo "<div style='color: green; font-weight: bold; padding: 10px; border: 1px solid green; margin: 10px 0;'>Завдання успішно пройшло валідацію і готове до збереження!";
-        if ($uploadedFilePath !== '') {
-            echo "<br>Файл збережено як: " . htmlspecialchars($uploadedFilePath);
-        }
-        echo "</div>";
+      $repo = new TaskRepository(__DIR__ . '/tasks.json');
+      $repo->add($title, $deadline);
 
-        if ($uploadedFilePath !== '') {
-            echo "<img src='" . htmlspecialchars($uploadedFilePath) . "' alt='Аватар' style='max-width:150px; border-radius:8px; margin-bottom:15px;'>";
-        }
+      echo "<div style='color: green; font-weight: bold; padding: 10px; border: 1px solid green; margin: 10px 0;'>Завдання успішно додано до бази даних!";
+      if ($uploadedFilePath !== '') {
+          echo "<br>Файл збережено як: " . htmlspecialchars($uploadedFilePath);
+      }
+      echo "</div>";
 
-        $title = '';
-        $description = '';
-        $priority = 'Low';
+      if ($uploadedFilePath !== '') {
+          echo "<img src='" . htmlspecialchars($uploadedFilePath) . "' alt='Аватар' style='max-width:150px; border-radius:8px; margin-bottom:15px;'>";
+      }
+      
+      $title = '';
+      $description = '';
+      $priority = 'Low';
+      $deadline = '';
     }
 }
 ?>
@@ -103,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     body { font-family: sans-serif; padding: 20px; }
     .form-group { margin-bottom: 15px; }
     label { display: block; margin-bottom: 5px; font-weight: bold; }
-    input[type="text"], textarea, select { width: 100%; max-width: 400px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    input[type="text"], input[type="date"], textarea, select { width: 100%; max-width: 400px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
     button { padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
     .error-box { background-color: #f8d7da; color: #721c24; padding: 10px; border: 1px solid #f5c6cb; border-radius: 4px; margin-bottom: 15px; max-width: 400px;}
     .back-link { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
@@ -135,6 +145,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="form-group">
       <label for="description">Опис завдання:</label>
       <textarea id="description" name="description" rows="4" placeholder="Деталі..."><?= $description ?></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="deadline">Дедлайн (необов'язково):</label>
+      <input type="date" id="deadline" name="deadline" value="<?= htmlspecialchars((string)$deadline) ?>">
     </div>
 
     <div class="form-group">
